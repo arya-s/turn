@@ -27,49 +27,45 @@
   <script type="text/javascript" src="js/DeviceOrientationControls.js" charset="utf-8"></script>
   <script type="text/javascript" charset="utf-8">
 
-    window.onload = function () {
+    var camera, scene, renderer, controls, light, loader, content;
+    var geometry, material, mesh, texture;
 
-      var camera, scene, renderer, controls, light, loader, content;
-      var geometry, material, mesh, texture;
+    content  = document.querySelector('#content');
+    camera   = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 10000);
+    controls = new THREE.DeviceOrientationControls(camera); 
+    scene    = new THREE.Scene();
 
-      content  = document.querySelector('#content');
-      camera   = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 10000);
-      controls = new THREE.DeviceOrientationControls(camera); 
-      scene    = new THREE.Scene();
+    light    = new THREE.PointLight(0xffffff);
+    light.position.set(0, 150, 100);
+    scene.add(light);
 
-      light    = new THREE.PointLight(0xffffff);
-      light.position.set(0, 150, 100);
-      scene.add(light);
+    geometry = new THREE.PlaneGeometry(400, 400);
 
-      geometry = new THREE.PlaneGeometry(400, 400);
+    loader   = new THREE.TextureLoader();
+    loader.load('textures/matthew.jpeg', function (texture) {
+      material = new THREE.MeshBasicMaterial({map: texture, side: THREE.DoubleSide});
+      mesh = new THREE.Mesh(geometry, material);
+      mesh.position.set(0, 0, 400);
+      scene.add(mesh);      
 
-      loader   = new THREE.TextureLoader();
-      loader.load('textures/matthew.jpeg', function (texture) {
-        material = new THREE.MeshBasicMaterial({map: texture, side: THREE.DoubleSide});
-        mesh = new THREE.Mesh(geometry, material);
-        mesh.position.set(0, 0, 400);
-        scene.add(mesh);      
+    });
 
-      });
+    renderer = new THREE.WebGLRenderer();
+    renderer.setClearColor(0xffffff);
+    renderer.setSize( window.innerWidth, window.innerHeight );
 
-      renderer = new THREE.WebGLRenderer();
-      renderer.setClearColor(0xffffff);
-      renderer.setSize( window.innerWidth, window.innerHeight );
+    content.appendChild(renderer.domElement);
 
-      content.appendChild(renderer.domElement);
+    var animate = function () {
 
-      var animate = function () {
+      window.requestAnimationFrame(animate);
+      controls.update();
+      mesh.setRotationFromQuaternion( camera.quaternion );
+      renderer.render(scene, camera);
 
-        window.requestAnimationFrame(animate);
-        controls.update();
-        mesh.setRotationFromQuaternion( camera.quaternion );
-        renderer.render(scene, camera);
-
-      };
-      animate();
-      
     };
-
+    animate();
+    
   </script>
 </body>
 </html>
