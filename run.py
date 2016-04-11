@@ -13,7 +13,7 @@ def run():
     (r"/js/(.*)", tornado.web.StaticFileHandler, {"path": "./js"}),
     (r"/textures/(.*)", tornado.web.StaticFileHandler, {"path": "./textures"}),
     (r"/", MainHandler),
-  ], debug=True)
+  ], debug=False)
 
 if __name__ == "__main__":
   app = run()
